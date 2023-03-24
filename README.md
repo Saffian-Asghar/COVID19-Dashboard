@@ -1,5 +1,10 @@
 # Covid-19 Dashboard
 This open-source project is an interactive Covid-19 dashboard that allows users to visualize the number of Covid-19 cases or deaths per country as a function of time. The dashboard is built using Streamlit, a Python library for building web-based data apps.
+
+## Team Members
+- Saffian
+- Hritika 
+- Sayed
 ## Data Source
 The Covid-19 data for all countries in the world is provided by Our World in Data, which offers a comprehensive and reliable dataset on the pandemic. The data is updated daily and can be accessed via their GitHub repository: https://github.com/owid/covid-19-data
 
@@ -29,3 +34,4 @@ This project is licensed under the MIT License
 
 ## Acknowledgments
 We would like to thank Our World in Data for providing the Covid-19 data and Streamlit for making it easy to build interactive data apps. We also acknowledge the contributions of the open-source community for creating a wealth of Python libraries and tools.
+
