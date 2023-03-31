@@ -1,46 +1,85 @@
-import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import streamlit as st
 import numpy as np
-
-url = 'https://covid.ourworldindata.org/data/owid-covid-data.csv'
-data = pd.read_csv(url)
-data = data[~data['continent'].isnull()]
-data = data[~data['location'].isnull()]
-
-st.sidebar.subheader("Select countries:")
-countries = st.sidebar.multiselect("Countries:", data['location'].unique())
-
-if not countries:
-    countries = ['France']
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 
-data['date'] = pd.to_datetime(data['date'])
 
-df_cases = data[data['location'].isin(countries)].pivot(index = 'date', columns='location', values='new_cases')
-df_deaths = data[data['location'].isin(countries)].pivot(index = 'date', columns='location', values='new_deaths')
+@st.cache_data
+def load_data(url):
+    df = pd.read_csv(url)
+    return df
+df = load_data('https://covid.ourworldindata.org/data/owid-covid-data.csv')
 
-chart_type = st.sidebar.selectbox("Chart type:", ('Daily Cases', 'Daily Deaths'))
 
-df = pd.DataFrame()
-if chart_type == 'Daily Cases':
-    title = "Daily New Cases by Country"
-    df = df_cases
-else:
-    title = "Daily New Deaths by Country"
-    df = df_deaths
+# Load the data from the provided CSV file
+# df = pd.read_csv('https://covid.ourworldindata.org/data/owid-covid-data.csv')
 
-fig, ax = plt.subplots(figsize=(12, 6))
-ax.plot(df.index, df.values)
+# Define a list of pre-defined countries
+countries = ['United States', 'India', 'Brazil', 'Russia', 'United Kingdom', 'France', 'Italy', 'Spain', 'Germany', 'China']
+
+# Create a date range selector
+start_date = st.sidebar.date_input("Start date", value=pd.to_datetime(df['date']).min())
+end_date = st.sidebar.date_input("End date", value=pd.to_datetime(df['date']).max())
+
+start_date = pd.to_datetime(start_date)
+end_date = pd.to_datetime(end_date)
+
+
+# Filter the data based on the selected date range
+mask = (pd.to_datetime(df['date']) >= start_date) & (pd.to_datetime(df['date']) <= end_date)
+df = df.loc[mask]
+
+# Create a variable selector
+options = ['number', 'cumulative_number', 'rolling_average']
+variable = st.sidebar.selectbox('Select a variable to display', options)
+
+# Create a country selector
+selected_countries = st.sidebar.multiselect('Select countries to display', countries, default=countries)
+
+# Filter the data based on the selected countries
+df = df[df['location'].isin(selected_countries)]
+
+# Group the data by date and country
+df_grouped = df.groupby(['date', 'location']).sum().reset_index()
+
+# Create the plot
+fig, ax = plt.subplots()
+# Set the number of x-axis ticks
+num_ticks = 10
+
+# Create the plot
+fig, ax = plt.subplots()
+
+# Plot the data
+for country in selected_countries:
+    # Filter the data for the current country
+    country_data = df_grouped[df_grouped['location'] == country]
+    
+    # Calculate the selected variable
+    if variable == 'cumulative_number':
+        country_data['value'] = country_data['total_cases_per_million']
+    elif variable == 'rolling_average':
+        window_size = 7
+        country_data['value'] = country_data['new_cases_per_million'].rolling(window_size).mean()
+    else:
+        country_data['value'] = country_data['new_cases_per_million']
+    
+    # Plot the data
+    ax.plot(country_data['date'], country_data['value'], label=country)
+
+# Set the plot title and axes labels
+ax.set_title(f"{variable.capitalize()} of COVID-19 Cases per million")
 ax.set_xlabel('Date')
-ax.set_ylabel(title)
-ax.set_title(title)
+ax.set_ylabel(variable.capitalize())
 
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
-ax.xaxis.set_major_locator(mdates.MonthLocator())
-plt.xticks(rotation=45, ha='right')
+# Add a legend to the plot
+ax.legend()
 
+# Set the x-axis tick labels to show only every nth label
+n = len(df['date']) // num_ticks
+ax.xaxis.set_major_locator(ticker.IndexLocator(base=n, offset=0))
 
-
+# Show the plot in Streamlit
 st.pyplot(fig)
