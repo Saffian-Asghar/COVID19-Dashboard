@@ -1,3 +1,4 @@
+[![SWH](https://archive.softwareheritage.org/badge/swh:1:dir:76b00b1af148405546d1d9e7581bfafa11edea68/)](https://archive.softwareheritage.org/swh:1:dir:76b00b1af148405546d1d9e7581bfafa11edea68;origin=https://github.com/Saffian-Asghar/dashboardteam1;visit=swh:1:snp:28f8dbc40f520fa461443abef0528abe7301e1bc;anchor=swh:1:rev:ed8bde274b5b5a73c5b5b034b0fae9a3a9008f1f)
 # Covid-19 Dashboard
 This open-source project is an interactive Covid-19 dashboard that allows users to visualize the number of Covid-19 cases or deaths per country as a function of time. The dashboard is built using Streamlit, a Python library for building web-based data apps.
 
