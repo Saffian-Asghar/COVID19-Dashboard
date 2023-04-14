@@ -1,0 +1,5 @@
+Part of Open Source course at Learning Planet Institute Paris, France
+
+Saffian Asghar <saffian-asghar@cri-paris.org>
+Hritika kathuria <hritika.kathuria@cri-paris.org>
+Sayed Mossavi <sayed.mossavi@cri-paris.org>

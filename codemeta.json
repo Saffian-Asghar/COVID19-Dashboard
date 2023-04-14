@@ -1,0 +1,11 @@
+{
+    "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+    "@type": "SoftwareSourceCode",
+    "dateCreated": "2023-03-20",
+    "datePublished": "2023-03-20",
+    "name": "Covid19 Dashboard",
+    "description": "Covid19 Dashboard with options to select different countries, daily cases or deaths, 7 day rolling or cumulative data",
+    "programmingLanguage": [
+        "Python3"
+    ]
+}
