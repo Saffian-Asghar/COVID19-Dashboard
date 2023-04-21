@@ -10,7 +10,7 @@ def load_data(url):
     return df
 
 df = load_data('https://covid.ourworldindata.org/data/owid-covid-data.csv')
-
+df = df.dropna(subset=['new_cases_per_million', 'new_deaths_per_million', 'total_cases_per_million', 'total_deaths_per_million'])
 countries = df['location'].unique()
 
 options_cases_deaths = ['Cases', 'Deaths']
@@ -81,4 +81,4 @@ elif variable == '7-Day Rolling Average':
                   range_x=[start_date, end_date])
 
 # Render the plot using Streamlit
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True, height=1200)
