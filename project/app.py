@@ -10,7 +10,7 @@ def load_data(url):
 
 df = load_data('https://covid.ourworldindata.org/data/owid-covid-data.csv')
 
-countries = ['United States', 'India', 'Brazil', 'Russia', 'United Kingdom', 'France', 'Italy', 'Spain', 'Germany', 'China']
+countries = df['location'].unique()
 
 options_cases_deaths = ['Cases', 'Deaths']
 selected_option = st.sidebar.selectbox('Select an option', options_cases_deaths)
@@ -26,7 +26,10 @@ df = df.loc[mask]
 options = ['Count', 'Cumulative Count', '7-Day Rolling Average']
 variable = st.sidebar.selectbox('Select the type of numerical data', options)
 
-selected_countries = st.sidebar.multiselect('Select one or more countries', countries, default=countries)
+if variable != 'Cumulative Count':
+    selected_countries = st.sidebar.multiselect('Select one or more countries', countries, default=['France'])
+else:
+    selected_countries = [st.sidebar.selectbox('Select a country', countries)]
 df = df[df['location'].isin(selected_countries)]
 
 df_grouped = df.groupby(['date', 'location']).sum().reset_index()
@@ -37,6 +40,7 @@ fig = px.line(df_grouped, x='date', y='new_cases_per_million', color='location',
               range_x=[start_date, end_date])
 
 if variable == 'Cumulative Count':
+
     if selected_option == 'Cases':
         fig.update_traces(y=df_grouped['total_cases_per_million'])
     else:
