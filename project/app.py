@@ -80,5 +80,10 @@ elif variable == '7-Day Rolling Average':
                   title=f"{selected_option.capitalize()} {variable.capitalize()} of COVID-19 per million - {window_size}-Day Rolling Average",
                   range_x=[start_date, end_date])
 
+elif variable == 'Count':
+    if selected_option == 'Cases':
+        fig.update_traces(y=df_grouped['new_cases_per_million'])
+    else:
+        fig.update_traces(y=df_grouped['new_deaths_per_million'])
 # Render the plot using Streamlit
 st.plotly_chart(fig, use_container_width=True, height=1200)
