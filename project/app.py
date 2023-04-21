@@ -67,10 +67,15 @@ if variable == 'Cumulative Count':
 elif variable == '7-Day Rolling Average':
     window_size = 7
     if selected_option == 'Cases':
-        rolling_avg = df_grouped['new_cases_per_million'].rolling(window_size).mean()
+        df_grouped['rolling_avg'] = df_grouped.groupby('location')['new_cases_per_million'].rolling(window_size).mean().reset_index(0,drop=True)
     else:
-        rolling_avg = df_grouped['new_deaths_per_million'].rolling(window_size).mean()
-    fig.update_traces(y=rolling_avg)
+        df_grouped['rolling_avg'] = df_grouped.groupby('location')['new_deaths_per_million'].rolling(window_size).mean().reset_index(0,drop=True)
+
+    fig = px.line(df_grouped, x='date', y='rolling_avg', color='location',
+                  labels={'y': f"{selected_option.capitalize()} {variable.capitalize()} per million",
+                          'rolling_avg': f"{window_size}-Day Rolling Average"},
+                  title=f"{selected_option.capitalize()} {variable.capitalize()} of COVID-19 per million - {window_size}-Day Rolling Average",
+                  range_x=[start_date, end_date])
 
 # Render the plot using Streamlit
 st.plotly_chart(fig)
