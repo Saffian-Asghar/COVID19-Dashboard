@@ -23,7 +23,7 @@ This will install the necessary Python packages, including Streamlit and Pandas.
 To launch the Covid-19 dashboard, run the following command:
 
 ```
-streamlit run app.py
+streamlit run project/app.py
 ```
 This will open a new tab in your default browser with the Covid-19 dashboard. From there, you can select the desired country, data type (cases or deaths), and time range using the interactive widgets.
 
