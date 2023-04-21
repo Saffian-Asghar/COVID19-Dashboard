@@ -50,20 +50,32 @@ if variable == 'Cumulative Count':
         daily_change = 20 * df_grouped.groupby('location')['total_deaths_per_million'].diff().fillna(0)
         
     show_derivative = st.checkbox('Show derivative')
+    show_peak = st.checkbox('Show Peaks')
     if show_derivative:
-        fig.add_trace(go.Scatter(x=df_grouped.loc[df_grouped['location']==selected_country, 'date'], 
-                                      y=daily_change, 
-                                      mode='lines', 
-                                      line=dict(color='grey', width=2),
-                                      name=f'{selected_country} - Derivative'))
-        highest_value = daily_change.max()
-        percentile_value = highest_value * 0.9
-        df_high_change = df_grouped[(df_grouped['location']==selected_country) & (daily_change >= percentile_value)]
-        fig.add_trace(go.Scatter(x=df_high_change['date'], 
-                                 y=df_high_change[f'total_{selected_option.lower()}_per_million'], 
-                                 mode='markers', 
-                                 marker=dict(color='red', size=8),
-                                 name=f'{selected_country} - Highest 90% Derivative'))
+        if show_peak:
+            fig.add_trace(go.Scatter(x=df_grouped.loc[df_grouped['location']==selected_country, 'date'], 
+                                        y=daily_change, 
+                                        mode='lines', 
+                                        line=dict(color='grey', width=2),
+                                        name=f'{selected_country} - Derivative'))
+            highest_value = daily_change.max()
+            percentile_value = highest_value * 0.9
+            df_high_change = df_grouped[(df_grouped['location']==selected_country) & (daily_change >= percentile_value)]
+            fig.add_trace(go.Scatter(x=df_high_change['date'], 
+                                    y=df_high_change[f'total_{selected_option.lower()}_per_million'], 
+                                    mode='markers', 
+                                    marker=dict(color='red', size=8),
+                                    name=f'{selected_country} - Highest 90% Derivative'))
+        else:
+            fig.add_trace(go.Scatter(x=df_grouped.loc[df_grouped['location']==selected_country, 'date'], 
+                            y=daily_change, 
+                            mode='lines', 
+                            line=dict(color='grey', width=2),
+                            name=f'{selected_country} - Derivative'))
+            daily_change_fig = px.line(df_grouped, x='date', y=daily_change, color='location',
+                            labels={'y': f"Daily change in {selected_option.lower()} {variable.lower()} per million"},
+                            title=f"Daily change in {selected_option.capitalize()} {variable.capitalize()} of COVID-19 per million",
+                            range_x=[start_date, end_date])
 
 
 
