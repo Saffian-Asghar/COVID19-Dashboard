@@ -27,6 +27,10 @@ streamlit run project/app.py
 ```
 This will open a new tab in your default browser with the Covid-19 dashboard. From there, you can select the desired country, data type (cases or deaths), and time range using the interactive widgets.
 
+## Streamlit Cloud Demo
+Check out the working demo of this project on the Streamlit Cloud:
+https://saffian-asghar-dashboardteam1-projectapp-pyx9l6.streamlit.app/
+
 ## Contributing
 Contributions to this project are welcome and encouraged. If you encounter any bugs or issues, please open a new issue on the GitHub repository. If you would like to contribute code, please fork the repository and submit a pull request with your changes.
 
